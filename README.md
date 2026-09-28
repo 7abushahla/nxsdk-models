@@ -48,3 +48,10 @@ For community support, Q&A and other information, please visit: http://neuromorp
   * Contributors:
     - Lyes Khacef (l.khacef@rug.nl)
     - Sumit Bam Shrestha
+
+## Offline public NxTF compiler
+
+This fork adds an SDK-independent entry point for the public NxTF partition
+compiler and a portable export of its compiled compartment, synapse, and axon
+resources. See [OFFLINE_COMPILER.md](OFFLINE_COMPILER.md) for setup, examples,
+artifact fields, and the boundary between public compilation and NxSDK mapping.

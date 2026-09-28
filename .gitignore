@@ -8,3 +8,6 @@
 *.a
 temp/
 .ipynb_checkpoints
+
+.venv/
+offline-output/

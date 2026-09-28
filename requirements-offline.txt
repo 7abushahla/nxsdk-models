@@ -1,0 +1,7 @@
+# Python 3.11. Keep NumPy below 1.24 for upstream ragged np.unique behavior.
+tensorflow==2.15.0
+numpy==1.23.5
+scipy==1.11.4
+matplotlib==3.8.4
+pyparsing==3.1.2
+psutil==7.2.2

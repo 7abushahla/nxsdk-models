@@ -40,7 +40,6 @@ from nxsdk_modules_ncl.dnn.src.plotting import plot_multiplicity, \
 from nxsdk_modules_ncl.dnn.src.data_structures import Layer, Partition, \
     SynapseGroup, OutputAxonGroup, CompartmentGroup, InputAxonGroup, \
     serializeLayer, deserializeLayer
-from nxsdk_modules_ncl.dnn.src.dnn_mapper import DnnMapper
 from nxsdk_modules_ncl.dnn.src.optimization import ExclusionCriteria, \
     PartitionOptimizer, getDummyLayer
 from nxsdk_modules_ncl.dnn.src.synapse_compression import SynapseEncoder, \
@@ -49,8 +48,18 @@ from nxsdk_modules_ncl.dnn.src.utils import getWeightsFromIds, _interleave, \
     _getMultiplicityMapConvlike, _getUniqueSourceGroups, _getSizeInterleaved, \
     _getDestinationGroups, _getPadding, _genKernelIdMap, \
     getPartitionCandidates, getS, logMemTime
-from nxsdk.arch.n2a.n2board import N2Board
-from nxsdk.logutils.nxlogging import get_logger
+
+
+def get_logger(name):
+    """Use SDK logging when installed, otherwise standard Python logging."""
+    try:
+        from nxsdk.logutils.nxlogging import get_logger as sdk_get_logger
+    except ModuleNotFoundError as error:
+        if error.name != 'nxsdk' and not error.name.startswith('nxsdk.'):
+            raise
+        return logging.getLogger(name)
+    return sdk_get_logger(name)
+
 
 if TYPE_CHECKING:
     from nxsdk.arch.n2a.graph.n2acore import N2ACore
@@ -2923,6 +2932,8 @@ class NxModel(Model):
         if not self._isInitialized:
             self.initialize()
 
+        from nxsdk.arch.n2a.n2board import N2Board
+
         self.board = N2Board(0, numCoresPerChip=self._maxNumCoresPerChip) \
             if board is None else board
 
@@ -2995,6 +3006,8 @@ class NxModel(Model):
 
         self.logger.info("Loading and mapping pre-compiled layers from %s.",
                          self.pathMappables)
+
+        from nxsdk_modules_ncl.dnn.src.dnn_mapper import DnnMapper
 
         mapper = DnnMapper(self.board)
 
